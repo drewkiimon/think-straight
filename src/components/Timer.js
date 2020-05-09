@@ -17,10 +17,17 @@ class Timer extends Component {
                 palette: {
                   primary: green
                 },
-            })
+            }),
+            id: null
         }
 
         this.toggleTimer = this.toggleTimer.bind(this);
+        this.runMe = this.runMe.bind(this);
+    }
+
+    runMe() {
+        // had to bind so I  could use 'this'
+        this.setState({current: this.state.current + 1})
     }
 
     toggleTimer(event) {
@@ -34,12 +41,24 @@ class Timer extends Component {
                 })
             }
         );
+
+        if (this.state.active) {
+            // clear
+            clearInterval(this.state.id);
+        } else {
+            var refreshIntervalId = setInterval(this.runMe, 1000);
+            this.setState({id: refreshIntervalId})
+        }
     }
 
     render() {
 
         return (
             <div className="timer">
+                <div>
+                    {Math.floor((this.state.pomodoroLength - this.state.current) / 60)} {(this.state.pomodoroLength - this.state.current) % 60}
+                </div>
+
                 <ThemeProvider theme={this.state.theme}>
                     <Button variant="contained" color="primary" onClick={this.toggleTimer}>
                         { this.state.active ? "Stop" : "Start" }
