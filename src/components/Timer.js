@@ -27,7 +27,11 @@ class Timer extends Component {
 
     runMe() {
         // had to bind so I  could use 'this'
-        this.setState({current: this.state.current + 1})
+        this.setState(
+            {
+                current: this.state.current + 1
+            }
+        );
     }
 
     toggleTimer(event) {
@@ -43,7 +47,6 @@ class Timer extends Component {
         );
 
         if (this.state.active) {
-            // clear
             clearInterval(this.state.id);
         } else {
             var refreshIntervalId = setInterval(this.runMe, 1000);
@@ -56,7 +59,11 @@ class Timer extends Component {
         return (
             <div className="timer">
                 <div>
-                    {Math.floor((this.state.pomodoroLength - this.state.current) / 60)} {(this.state.pomodoroLength - this.state.current) % 60}
+                    <span>{(this.state.pomodoroLength - this.state.current) / 60 | 0}</span>
+                    <span> : </span> 
+                    <span>{String((this.state.pomodoroLength - this.state.current) % 60).length === 1 ? 
+                        "0" + ((this.state.pomodoroLength - this.state.current) % 60) : 
+                        (this.state.pomodoroLength - this.state.current) % 60}</span>
                 </div>
 
                 <ThemeProvider theme={this.state.theme}>
