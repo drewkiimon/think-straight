@@ -1,13 +1,28 @@
 import React from "react";
 import "./App.scss";
-import Button from "@material-ui/core/Button";
+import Grid from '@material-ui/core/Grid';
+
+// Components
+import Timer from "./components/Timer";
 
 function App() {
+
 	return (
 		<div className='App'>
-			<Button variant='contained' color='primary'>
-				Hello World
-			</Button>
+			<Grid
+				container
+				spacing={0}
+				direction="column"
+				alignItems="center"
+				justify="center"
+				style={{ minHeight: '100vh' }}
+				>
+
+				<Grid item xs={12}>
+					<Timer></Timer>
+				</Grid>   
+
+			</Grid> 
 		</div>
 	);
 }
