@@ -1,9 +1,8 @@
 import React from "react";
-import "./App.scss";
 import Grid from '@material-ui/core/Grid';
-
-// Components
 import Timer from "./components/Timer";
+
+import "./App.scss";
 
 function App() {
 
@@ -12,7 +11,7 @@ function App() {
 			<Grid
 				container
 				spacing={0}
-				direction="column"
+				// direction="column"
 				alignItems="center"
 				justify="center"
 				style={{ minHeight: '100vh' }}
