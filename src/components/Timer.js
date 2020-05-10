@@ -27,11 +27,31 @@ class Timer extends Component {
     }
 
     runMe() {
+
         this.setState(
             {
                 current: this.state.current + 1
             }
         );
+
+        // We are done
+        if (this.state.current === this.state.pomodoroLength) {
+            // change title back
+            document.title = "Think Straight";
+            // clear the current time
+            clearInterval(this.state.id);
+            this.setState(
+                {
+                    active: false,
+                    current : 0,
+                    theme: createMuiTheme({
+                        palette: {
+                            primary: this.state.active ? green : red
+                        }
+                    })
+                }
+            );
+        }
     }
 
     toggleTimer(event) {
@@ -47,8 +67,10 @@ class Timer extends Component {
         );
 
         if (this.state.active) {
+            document.title = "Paused";
             clearInterval(this.state.id);
         } else {
+            document.title = "Going...";
             var refreshIntervalId = setInterval(this.runMe, 1000);
             this.setState({id: refreshIntervalId})
         }
@@ -69,7 +91,7 @@ class Timer extends Component {
                         (this.state.pomodoroLength - this.state.current) % 60}</span>
                 </Grid>
 
-                <Grid item xs={10}>
+                <Grid item lg={3} md={4} sm={7} xs={8}>
                     <ThemeProvider theme={this.state.theme}>
                         <Button className="timer-action-button" variant="contained" color="primary" onClick={this.toggleTimer}>
                             { this.state.active ? "Pause" : "Start" }
