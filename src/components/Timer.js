@@ -27,7 +27,6 @@ class Timer extends Component {
     }
 
     runMe() {
-        console.log(this.state.current);
         this.setState(
             {
                 current: this.state.current + 1
@@ -62,9 +61,9 @@ class Timer extends Component {
                 alignItems="center"
                 justify="center"
                 className="timer">
-                <Grid item xs={12} className="timer-holder">
-                    <span>{(this.state.pomodoroLength - this.state.current) / 60 | 0}</span>
-                    <span> : </span> 
+                <Grid fontFamily="Monospace" item xs={12} className="timer-holder">
+                    <span fontFamily="Monospace">{(this.state.pomodoroLength - this.state.current) / 60 | 0}</span>
+                    <span>:</span> 
                     <span>{String((this.state.pomodoroLength - this.state.current) % 60).length === 1 ? 
                         "0" + ((this.state.pomodoroLength - this.state.current) % 60) : 
                         (this.state.pomodoroLength - this.state.current) % 60}</span>
