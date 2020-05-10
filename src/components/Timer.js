@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as Constants from "../constants/constants";
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -24,21 +25,19 @@ class Timer extends Component {
 
         this.toggleTimer = this.toggleTimer.bind(this);
         this.runMe = this.runMe.bind(this);
+        this.time = this.time.bind(this);
     }
 
     runMe() {
-
         this.setState(
             {
                 current: this.state.current + 1
             }
         );
 
-        // We are done
         if (this.state.current === this.state.pomodoroLength) {
-            // change title back
-            document.title = "think straight.";
-            // clear the current time
+            document.title = Constants.THINK_STRAIGHT;
+
             clearInterval(this.state.id);
             this.setState(
                 {
@@ -67,13 +66,22 @@ class Timer extends Component {
         );
 
         if (this.state.active) {
-            document.title = "paused.";
+            document.title = Constants.PAUSED;
             clearInterval(this.state.id);
         } else {
-            document.title = "focusing...";
+            document.title = Constants.FOCUSING;
             var refreshIntervalId = setInterval(this.runMe, 1000);
             this.setState({id: refreshIntervalId})
         }
+    }
+
+    time() {
+        var minutes = (this.state.pomodoroLength - this.state.current) / 60 | 0,
+            seconds = String((this.state.pomodoroLength - this.state.current) % 60).length === 1 ? 
+                        "0" + ((this.state.pomodoroLength - this.state.current) % 60) : 
+                        (this.state.pomodoroLength - this.state.current) % 60;
+
+        return minutes + ":" + seconds;
     }
 
     render() {
@@ -83,13 +91,8 @@ class Timer extends Component {
                 alignItems="center"
                 justify="center"
                 className="timer">
-                <Grid fontFamily="Monospace" item xs={12} className="timer-holder">
-                    <span fontFamily="Monospace">{(this.state.pomodoroLength - this.state.current) / 60 | 0}</span>
-                    <span>:</span> 
-                    <span>{String((this.state.pomodoroLength - this.state.current) % 60).length === 1 ? 
-                        "0" + ((this.state.pomodoroLength - this.state.current) % 60) : 
-                        (this.state.pomodoroLength - this.state.current) % 60}</span>
-                </Grid>
+
+                <Grid item xs={12} className="timer-holder">{this.time()}</Grid>
 
                 <Grid item lg={3} md={4} sm={7} xs={8}>
                     <ThemeProvider theme={this.state.theme}>
