@@ -37,7 +37,7 @@ class Timer extends Component {
         // We are done
         if (this.state.current === this.state.pomodoroLength) {
             // change title back
-            document.title = "Think Straight";
+            document.title = "think straight.";
             // clear the current time
             clearInterval(this.state.id);
             this.setState(
@@ -67,10 +67,10 @@ class Timer extends Component {
         );
 
         if (this.state.active) {
-            document.title = "Paused";
+            document.title = "paused.";
             clearInterval(this.state.id);
         } else {
-            document.title = "Going...";
+            document.title = "focusing...";
             var refreshIntervalId = setInterval(this.runMe, 1000);
             this.setState({id: refreshIntervalId})
         }
