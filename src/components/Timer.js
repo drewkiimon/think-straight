@@ -87,21 +87,18 @@ class Timer extends Component {
     render() {
 
         return (
-            <Grid container 
-                alignItems="center"
-                justify="center"
-                className="timer">
+            <div className="timer">
 
-                <Grid item xs={12} className="timer-holder">{this.time()}</Grid>
+                <div className="timer-holder">{this.time()}</div>
 
-                <Grid item lg={3} md={4} sm={7} xs={8}>
+                <div className="timer-button" lg={3} md={4} sm={7} xs={8}>
                     <ThemeProvider theme={this.state.theme}>
                         <Button className="timer-action-button" variant="contained" color="primary" onClick={this.toggleTimer}>
                             { this.state.active ? "Pause" : "Start" }
                         </Button>
                     </ThemeProvider>
-                </Grid>
-            </Grid>
+                </div>
+            </div>
         )
     }
 }
