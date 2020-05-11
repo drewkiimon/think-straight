@@ -1,15 +1,16 @@
 .timer {
-    .timer-holder {
-        font-size: 108px;
-        font-family: 'Roboto Mono', monospace;
-    }
+	.timer-holder {
+		font-size: 108px;
+		font-family: "Roboto Mono", monospace;
+	}
 
-    .timer-holder, .timer-button {
-        width: 350px;
-        margin: auto;
-    }
+	.timer-holder,
+	.timer-button {
+		width: 350px;
+		margin: auto;
+	}
 
-    .timer-action-button {
-        width: 100%
-    }
+	.timer-action-button {
+		width: 100%;
+	}
 }
