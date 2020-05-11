@@ -14,6 +14,7 @@ class Timer extends Component {
 			pomodoroLength: 25 * 60,
 			shortBreakLength: 5 * 60,
 			longBreakLength: 15 * 60,
+			timerLength: 25 * 60,
 			current: 0,
 			completedPomodoros: 0,
 			active: false,
@@ -32,7 +33,7 @@ class Timer extends Component {
 		this.runMe = this.runMe.bind(this);
 		this.getTime = this.getTime.bind(this);
 		this.playAlarm = this.playAlarm.bind(this);
-		this.toggleBreak = this.toggleBreak.bind(this);
+		this.startBreak = this.startBreak.bind(this);
 	}
 
 	playAlarm() {
@@ -55,8 +56,11 @@ class Timer extends Component {
 
 		if (
 			this.state.onShortBreak &&
-			this.state.current === this.state.shortBreakLength
+			this.state.current === 2
+			// test
+			// this.state.current === this.state.shortBreakLength
 		) {
+			console.log("Me");
 			this.playAlarm();
 
 			document.title = Constants.LETS_GO;
@@ -72,17 +76,23 @@ class Timer extends Component {
 					},
 				}),
 				readyForBreak: false,
+				timerLength: this.state.pomodoroLength,
 			});
 		} else if (
 			this.state.onLongBreak &&
 			this.state.current === this.state.longBreakLength
 		) {
+			console.log("you");
 			this.playAlarm();
 
 			document.title = Constants.LETS_GO;
 
 			clearInterval(this.state.id);
-		} else if (this.state.current === 3) {
+		} else if (
+			!this.state.onShortBreak &&
+			!this.state.onLongBreak &&
+			this.state.current === 3
+		) {
 			// if (this.state.current === this.state.pomodoroLength) {
 			// test
 			this.playAlarm();
@@ -125,16 +135,23 @@ class Timer extends Component {
 		}
 	}
 
-	toggleBreak() {
+	startBreak() {
 		let breakType =
 			this.state.completedPomodoros % 4 === 0 ? "LONG" : "SHORT";
 
 		document.title = Constants.TAKING_A_BREATHER;
 
+		console.log("break type", breakType);
+
 		this.setState({
 			id: refreshIntervalId,
 			onLongBreak: breakType === "LONG",
 			onShortBreak: breakType === "SHORT",
+			readyForBreak: false, // we are on the break now
+			timerLength:
+				breakType === "SHORT"
+					? this.state.shortBreakLength
+					: this.state.longBreakLength,
 		});
 
 		var refreshIntervalId = setInterval(this.runMe, 1000);
@@ -158,7 +175,7 @@ class Timer extends Component {
 				<div className='timer-holder'>
 					{this.state.readyForBreak
 						? Constants.BREAK
-						: this.getTime(this.state.pomodoroLength)}
+						: this.getTime(this.state.timerLength)}
 				</div>
 
 				<div className='timer-button' lg={3} md={4} sm={7} xs={8}>
@@ -168,7 +185,7 @@ class Timer extends Component {
 								className='timer-action-button'
 								variant='contained'
 								color='primary'
-								onClick={this.toggleBreak}>
+								onClick={this.startBreak}>
 								{this.state.active ? "Pause" : "Start Break"}
 							</Button>
 						) : (
