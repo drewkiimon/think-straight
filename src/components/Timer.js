@@ -68,15 +68,18 @@ class Timer extends Component {
 			clearInterval(this.state.id);
 
 			this.setState({
-				active: false,
+				timerLength: 25 * 60,
 				current: 0,
+				active: false,
+				readyForBreak: false,
+				onShortBreak: false,
+				onLongBreak: false,
 				theme: createMuiTheme({
 					palette: {
-						primary: this.state.active ? green : red,
+						primary: green,
 					},
 				}),
-				readyForBreak: false,
-				timerLength: this.state.pomodoroLength,
+				id: null,
 			});
 		} else if (
 			this.state.onLongBreak &&
@@ -141,20 +144,24 @@ class Timer extends Component {
 
 		document.title = Constants.TAKING_A_BREATHER;
 
-		console.log("break type", breakType);
+		var refreshIntervalId = setInterval(this.runMe, 1000);
 
 		this.setState({
+			active: true,
 			id: refreshIntervalId,
 			onLongBreak: breakType === "LONG",
 			onShortBreak: breakType === "SHORT",
-			readyForBreak: false, // we are on the break now
+			readyForBreak: false,
 			timerLength:
 				breakType === "SHORT"
 					? this.state.shortBreakLength
 					: this.state.longBreakLength,
+			theme: createMuiTheme({
+				palette: {
+					primary: red,
+				},
+			}),
 		});
-
-		var refreshIntervalId = setInterval(this.runMe, 1000);
 	}
 
 	getTime(timerLength) {
