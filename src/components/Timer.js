@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import * as Constants from "../constants/constants";
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { green, red } from '@material-ui/core/colors';
 
@@ -26,6 +25,19 @@ class Timer extends Component {
         this.toggleTimer = this.toggleTimer.bind(this);
         this.runMe = this.runMe.bind(this);
         this.time = this.time.bind(this);
+        this.playAlarm = this.playAlarm.bind(this);
+    }
+
+    playAlarm() {
+        var audio = document.getElementById("audio");
+
+        audio.play()
+            .then(function() {
+                console.log('Playback success');
+            })
+            .catch(function(err) {
+                console.log('Playback error:', err);
+            });
     }
 
     runMe() {
@@ -36,6 +48,8 @@ class Timer extends Component {
         );
 
         if (this.state.current === this.state.pomodoroLength) {
+            this.playAlarm(); 
+
             document.title = Constants.THINK_STRAIGHT;
 
             clearInterval(this.state.id);
@@ -88,7 +102,7 @@ class Timer extends Component {
 
         return (
             <div className="timer">
-
+                <audio id="audio" src="./done.mp3" type="audio/mpeg"></audio>
                 <div className="timer-holder">{this.time()}</div>
 
                 <div className="timer-button" lg={3} md={4} sm={7} xs={8}>
