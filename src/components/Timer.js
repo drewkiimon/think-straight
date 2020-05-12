@@ -11,10 +11,7 @@ class Timer extends Component {
 		super(props);
 
 		this.state = {
-			pomodoroLength: 25 * 60,
-			shortBreakLength: 5 * 60,
-			longBreakLength: 15 * 60,
-			timerLength: 25 * 60,
+			timerLength: Constants.POMODORO_LENGTH,
 			current: 0,
 			completedPomodoros: 0,
 			active: false,
@@ -30,7 +27,7 @@ class Timer extends Component {
 		};
 
 		this.toggleTimer = this.toggleTimer.bind(this);
-		this.runMe = this.runMe.bind(this);
+		this.incrementTimer = this.incrementTimer.bind(this);
 		this.getTime = this.getTime.bind(this);
 		this.playAlarm = this.playAlarm.bind(this);
 		this.startBreak = this.startBreak.bind(this);
@@ -49,18 +46,15 @@ class Timer extends Component {
 			});
 	}
 
-	runMe() {
+	incrementTimer() {
 		this.setState({
 			current: this.state.current + 1,
 		});
 
 		if (
 			this.state.onShortBreak &&
-			this.state.current === 2
-			// test
-			// this.state.current === this.state.shortBreakLength
+			this.state.current === Constants.SHORT_BREAK_LENGTH
 		) {
-			console.log("Me");
 			this.playAlarm();
 
 			document.title = Constants.LETS_GO;
@@ -68,7 +62,7 @@ class Timer extends Component {
 			clearInterval(this.state.id);
 
 			this.setState({
-				timerLength: 25 * 60,
+				timerLength: Constants.POMODORO_LENGTH,
 				current: 0,
 				active: false,
 				readyForBreak: false,
@@ -83,21 +77,33 @@ class Timer extends Component {
 			});
 		} else if (
 			this.state.onLongBreak &&
-			this.state.current === this.state.longBreakLength
+			this.state.current === Constants.LONG_BREAK_LENGTH
 		) {
-			console.log("you");
 			this.playAlarm();
 
 			document.title = Constants.LETS_GO;
 
 			clearInterval(this.state.id);
+
+			this.setState({
+				timerLength: Constants.POMODORO_LENGTH,
+				current: 0,
+				active: false,
+				readyForBreak: false,
+				onShortBreak: false,
+				onLongBreak: false,
+				theme: createMuiTheme({
+					palette: {
+						primary: green,
+					},
+				}),
+				id: null,
+			});
 		} else if (
 			!this.state.onShortBreak &&
 			!this.state.onLongBreak &&
-			this.state.current === 3
+			this.state.current === this.state.pomodoroLength
 		) {
-			// if (this.state.current === this.state.pomodoroLength) {
-			// test
 			this.playAlarm();
 
 			document.title = Constants.THINK_STRAIGHT;
@@ -133,7 +139,7 @@ class Timer extends Component {
 			clearInterval(this.state.id);
 		} else {
 			document.title = Constants.FOCUSING;
-			var refreshIntervalId = setInterval(this.runMe, 1000);
+			var refreshIntervalId = setInterval(this.incrementTimer, 1000);
 			this.setState({ id: refreshIntervalId });
 		}
 	}
@@ -144,7 +150,7 @@ class Timer extends Component {
 
 		document.title = Constants.TAKING_A_BREATHER;
 
-		var refreshIntervalId = setInterval(this.runMe, 1000);
+		var refreshIntervalId = setInterval(this.incrementTimer, 1000);
 
 		this.setState({
 			active: true,
@@ -154,8 +160,8 @@ class Timer extends Component {
 			readyForBreak: false,
 			timerLength:
 				breakType === "SHORT"
-					? this.state.shortBreakLength
-					: this.state.longBreakLength,
+					? Constants.SHORT_BREAK_LENGTH
+					: Constants.LONG_BREAK_LENGTH,
 			theme: createMuiTheme({
 				palette: {
 					primary: red,

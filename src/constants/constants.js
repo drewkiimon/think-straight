@@ -6,3 +6,8 @@ export const START_SHORT_BREAK = "start short break";
 export const START_LONG_BREAK = "start long break";
 export const LETS_GO = "lets go.";
 export const TAKING_A_BREATHER = "taking a breather.";
+
+
+export const POMODORO_LENGTH = 1500; // 25 * 60
+export const SHORT_BREAK_LENGTH = 300; // 5 * 60
+export const LONG_BREAK_LENGTH = 900; // 15 * 60
