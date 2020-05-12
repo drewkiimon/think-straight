@@ -53,7 +53,8 @@ class Timer extends Component {
 
 		if (
 			this.state.onShortBreak &&
-			this.state.current === Constants.SHORT_BREAK_LENGTH
+			this.state.current === 2
+			// this.state.current === Constants.SHORT_BREAK_LENGTH
 		) {
 			this.playAlarm();
 
@@ -102,7 +103,8 @@ class Timer extends Component {
 		} else if (
 			!this.state.onShortBreak &&
 			!this.state.onLongBreak &&
-			this.state.current === this.state.pomodoroLength
+			this.state.current === 2
+			// this.state.current === this.state.pomodoroLength
 		) {
 			this.playAlarm();
 
@@ -181,9 +183,18 @@ class Timer extends Component {
 	}
 
 	render() {
+		var streaks = [];
+
+		// this keeps happening with each timer tick
+		for (var streak = 0; streak < this.state.completedPomodoros; streak ++) {
+			streaks.push(<i key={streak} className="fas fa-fire-alt"></i>);
+		}
+
 		return (
 			<div className='timer'>
 				<audio id='audio' src='./done.mp3' type='audio/mpeg'></audio>
+
+				{streaks}
 
 				<div className='timer-holder'>
 					{this.state.readyForBreak
