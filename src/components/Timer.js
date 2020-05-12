@@ -53,8 +53,7 @@ class Timer extends Component {
 
 		if (
 			this.state.onShortBreak &&
-			this.state.current === 2
-			// this.state.current === Constants.SHORT_BREAK_LENGTH
+			this.state.current === Constants.SHORT_BREAK_LENGTH
 		) {
 			this.playAlarm();
 
@@ -103,8 +102,7 @@ class Timer extends Component {
 		} else if (
 			!this.state.onShortBreak &&
 			!this.state.onLongBreak &&
-			this.state.current === 2
-			// this.state.current === this.state.pomodoroLength
+			this.state.current === Constants.POMODORO_LENGTH
 		) {
 			this.playAlarm();
 
@@ -194,9 +192,7 @@ class Timer extends Component {
 			<div className='timer'>
 				<audio id='audio' src='./done.mp3' type='audio/mpeg'></audio>
 
-				{streaks}
-
-				<div className='timer-holder'>
+				<div className='break'>
 					{this.state.readyForBreak
 						? Constants.BREAK
 						: this.getTime(this.state.timerLength)}
@@ -222,6 +218,10 @@ class Timer extends Component {
 							</Button>
 						)}
 					</ThemeProvider>
+				</div>
+
+				<div className="streak">
+					{streaks}
 				</div>
 			</div>
 		);

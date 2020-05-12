@@ -4,8 +4,28 @@
 		font-family: "Roboto Mono", monospace;
 	}
 
+	.break {
+		font-size: 96px;
+		font-family: "Roboto Mono", monospace;
+	}
+
+	.streak {
+		height: 20px;
+		padding-top: 16px;
+		font-size: 20px;
+
+		.fa-fire-alt {
+			color: red;
+
+			&:not(:first-child) {
+				margin-left: 8px;
+			}
+		}
+	}
+
 	.timer-holder,
-	.timer-button {
+	.timer-button,
+	.streak {
 		width: 350px;
 		margin: auto;
 	}
