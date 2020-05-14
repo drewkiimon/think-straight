@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as Constants from "./../../constants/constants";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -33,12 +34,12 @@ class TimerActions extends Component {
 
 	render() {
 		return (
-			<div className="timer-actions">
+			<div className='timer-actions'>
 				<IconButton
 					aria-controls='simple-menu'
 					aria-haspopup='true'
 					onClick={this.toggleMenu}>
-					<i className="fas fa-chevron-circle-down"></i>
+					<i className='fas fa-chevron-circle-down'></i>
 				</IconButton>
 				<Menu
 					id='simple-menu'
@@ -46,8 +47,12 @@ class TimerActions extends Component {
 					keepMounted
 					open={Boolean(this.state.isOpen)}
 					onClose={this.handleClose}>
-					<MenuItem onClick={this.stopPomodoroCycle}>Stop</MenuItem>
-					<MenuItem onClick={this.handleClose}>Meow</MenuItem>
+					<MenuItem onClick={this.stopPomodoroCycle}>
+						{Constants.RESET}
+					</MenuItem>
+					{/* <MenuItem onClick={this.handleClose}>
+						{Constants.START_SHORT_BREAK}
+					</MenuItem> */}
 				</Menu>
 			</div>
 		);

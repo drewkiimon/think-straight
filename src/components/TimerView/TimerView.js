@@ -5,12 +5,12 @@ import "./TimerView.scss";
 
 class TimerView extends Component {
 	getTime() {
-		var minutes = ((this.props.timerLength - this.props.current) / 60) | 0,
+		var timeElapsed = this.props.timerLength - this.props.current,
+			minutes = (timeElapsed / 60) | 0,
 			seconds =
-				String((this.props.timerLength - this.props.current) % 60)
-					.length === 1
-					? "0" + ((this.props.timerLength - this.props.current) % 60)
-					: (this.props.timerLength - this.props.current) % 60;
+				String(timeElapsed % 60).length === 1
+					? "0" + (timeElapsed % 60)
+					: timeElapsed % 60;
 
 		return minutes + ":" + seconds;
 	}

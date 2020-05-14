@@ -38,8 +38,10 @@ class Timer extends Component {
 	}
 
 	stopPomodoroCycle() {
+		document.title = Constants.THINK_STRAIGHT;
+
 		clearInterval(this.state.id);
-		
+
 		this.setState({
 			current: 0,
 			timerLength: Constants.POMODORO_LENGTH,
@@ -53,7 +55,7 @@ class Timer extends Component {
 				},
 			}),
 			id: null,
-		})
+		});
 	}
 
 	playAlarm() {
@@ -223,7 +225,10 @@ class Timer extends Component {
 							</Button>
 						)}
 					</ThemeProvider>
-					<TimerActions stopPomodoroCycle={this.stopPomodoroCycle}></TimerActions>
+					<TimerActions
+						stopPomodoroCycle={
+							this.stopPomodoroCycle
+						}></TimerActions>
 				</div>
 
 				<Streaks
