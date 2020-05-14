@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import * as Constants from "../constants/constants";
+import moment from "moment";
 import Button from "@material-ui/core/Button";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { green, red } from "@material-ui/core/colors";
@@ -37,6 +38,29 @@ class Timer extends Component {
 		this.stopPomodoroCycle = this.stopPomodoroCycle.bind(this);
 	}
 
+	componentDidMount() {
+		let today = moment().format("l"),
+			key = Constants.THINK_STRAIGHT_KEY + Constants.DATE + today;
+
+		if (!localStorage.getItem(key)) {
+			localStorage.setItem(key, today);
+			// Add a "Snackbar" from material UI to say if they're on a streak or not
+		}
+	}
+
+	playAlarm() {
+		var audio = document.getElementById("audio");
+
+		audio
+			.play()
+			.then(function () {
+				console.log("Playback success");
+			})
+			.catch(function (err) {
+				console.log("Playback error:", err);
+			});
+	}
+
 	stopPomodoroCycle() {
 		document.title = Constants.THINK_STRAIGHT;
 
@@ -56,19 +80,6 @@ class Timer extends Component {
 			}),
 			id: null,
 		});
-	}
-
-	playAlarm() {
-		var audio = document.getElementById("audio");
-
-		audio
-			.play()
-			.then(function () {
-				console.log("Playback success");
-			})
-			.catch(function (err) {
-				console.log("Playback error:", err);
-			});
 	}
 
 	incrementTimer() {
