@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import * as Constants from "../constants/constants";
 import moment from "moment";
 import Button from "@material-ui/core/Button";
+import Snackbar from "@material-ui/core/Snackbar";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { green, red } from "@material-ui/core/colors";
 
@@ -130,8 +131,7 @@ class Timer extends Component {
 		} else if (
 			!this.state.onShortBreak &&
 			!this.state.onLongBreak &&
-			this.state.current === 3
-			// this.state.current === Constants.POMODORO_LENGTH
+			this.state.current === Constants.POMODORO_LENGTH
 		) {
 			this.playAlarm();
 
