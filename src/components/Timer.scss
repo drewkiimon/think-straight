@@ -1,36 +1,10 @@
 .timer {
-	.timer-holder {
-		font-size: 108px;
-		font-family: "Roboto Mono", monospace;
-	}
-
-	.break {
-		font-size: 96px;
-		font-family: "Roboto Mono", monospace;
-	}
-
-	.streak {
-		height: 20px;
-		padding-top: 16px;
-		font-size: 20px;
-
-		.fa-fire-alt {
-			color: red;
-
-			&:not(:first-child) {
-				margin-left: 8px;
-			}
-		}
-	}
-
-	.timer-holder,
-	.timer-button,
-	.streak {
+	.timer-button {
 		width: 350px;
 		margin: auto;
 	}
 
 	.timer-action-button {
-		width: 100%;
+		width: calc(100% - 48px);
 	}
 }

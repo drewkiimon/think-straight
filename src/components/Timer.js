@@ -4,6 +4,10 @@ import Button from "@material-ui/core/Button";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { green, red } from "@material-ui/core/colors";
 
+import TimerView from "./TimerView/TimerView";
+import Streaks from "./Streaks/Streaks";
+import TimerActions from "./TimerActions/TimerActions";
+
 import "./Timer.scss";
 
 class Timer extends Component {
@@ -28,9 +32,30 @@ class Timer extends Component {
 
 		this.toggleTimer = this.toggleTimer.bind(this);
 		this.incrementTimer = this.incrementTimer.bind(this);
-		this.getTime = this.getTime.bind(this);
 		this.playAlarm = this.playAlarm.bind(this);
 		this.startBreak = this.startBreak.bind(this);
+		this.stopPomodoroCycle = this.stopPomodoroCycle.bind(this);
+	}
+
+	stopPomodoroCycle() {
+		document.title = Constants.THINK_STRAIGHT;
+
+		clearInterval(this.state.id);
+
+		this.setState({
+			current: 0,
+			timerLength: Constants.POMODORO_LENGTH,
+			active: false,
+			readyForBreak: false,
+			onShortBreak: false,
+			onLongBreak: false,
+			theme: createMuiTheme({
+				palette: {
+					primary: green,
+				},
+			}),
+			id: null,
+		});
 	}
 
 	playAlarm() {
@@ -170,33 +195,15 @@ class Timer extends Component {
 		});
 	}
 
-	getTime(timerLength) {
-		var minutes = ((timerLength - this.state.current) / 60) | 0,
-			seconds =
-				String((timerLength - this.state.current) % 60).length === 1
-					? "0" + ((timerLength - this.state.current) % 60)
-					: (timerLength - this.state.current) % 60;
-
-		return minutes + ":" + seconds;
-	}
-
 	render() {
-		var streaks = [];
-
-		// this keeps happening with each timer tick
-		for (var streak = 0; streak < this.state.completedPomodoros; streak ++) {
-			streaks.push(<i key={streak} className="fas fa-fire-alt"></i>);
-		}
-
 		return (
 			<div className='timer'>
 				<audio id='audio' src='./done.mp3' type='audio/mpeg'></audio>
 
-				<div className='break'>
-					{this.state.readyForBreak
-						? Constants.BREAK
-						: this.getTime(this.state.timerLength)}
-				</div>
+				<TimerView
+					timerLength={this.state.timerLength}
+					readyForBreak={this.state.readyForBreak}
+					current={this.state.current}></TimerView>
 
 				<div className='timer-button' lg={3} md={4} sm={7} xs={8}>
 					<ThemeProvider theme={this.state.theme}>
@@ -218,11 +225,16 @@ class Timer extends Component {
 							</Button>
 						)}
 					</ThemeProvider>
+					<TimerActions
+						stopPomodoroCycle={
+							this.stopPomodoroCycle
+						}></TimerActions>
 				</div>
 
-				<div className="streak">
-					{streaks}
-				</div>
+				<Streaks
+					completedPomodoros={
+						this.state.completedPomodoros
+					}></Streaks>
 			</div>
 		);
 	}
