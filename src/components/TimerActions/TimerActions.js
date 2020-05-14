@@ -3,6 +3,8 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 
+import "./TimerActions.scss";
+
 class TimerActions extends Component {
 	constructor(props) {
 		super(props);
@@ -25,12 +27,12 @@ class TimerActions extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="timer-actions">
 				<IconButton
 					aria-controls='simple-menu'
 					aria-haspopup='true'
 					onClick={this.toggleMenu}>
-					<i className='far fa-caret-square-down'></i>
+					<i className="fas fa-chevron-circle-down"></i>
 				</IconButton>
 				<Menu
 					id='simple-menu'

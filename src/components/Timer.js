@@ -203,14 +203,13 @@ class Timer extends Component {
 							</Button>
 						)}
 					</ThemeProvider>
+					<TimerActions></TimerActions>
 				</div>
 
 				<Streaks
 					completedPomodoros={
 						this.state.completedPomodoros
 					}></Streaks>
-
-				<TimerActions></TimerActions>
 			</div>
 		);
 	}
