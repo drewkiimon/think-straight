@@ -15,10 +15,16 @@ class TimerActions extends Component {
 
 		this.toggleMenu = this.toggleMenu.bind(this);
 		this.handleClose = this.handleClose.bind(this);
+		this.stopPomodoroCycle = this.stopPomodoroCycle.bind(this);
 	}
 
 	toggleMenu(event) {
 		this.setState({ isOpen: event.currentTarget });
+	}
+
+	stopPomodoroCycle() {
+		this.props.stopPomodoroCycle();
+		this.setState({ isOpen: null });
 	}
 
 	handleClose() {
@@ -40,11 +46,8 @@ class TimerActions extends Component {
 					keepMounted
 					open={Boolean(this.state.isOpen)}
 					onClose={this.handleClose}>
-					<MenuItem onClick={this.handleClose}>Start Cycle</MenuItem>
-					<MenuItem onClick={this.handleClose}>Stop</MenuItem>
-					<MenuItem onClick={this.handleClose}>
-						Restart Cycle
-					</MenuItem>
+					<MenuItem onClick={this.stopPomodoroCycle}>Stop</MenuItem>
+					<MenuItem onClick={this.handleClose}>Meow</MenuItem>
 				</Menu>
 			</div>
 		);

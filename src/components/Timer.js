@@ -34,6 +34,26 @@ class Timer extends Component {
 		this.incrementTimer = this.incrementTimer.bind(this);
 		this.playAlarm = this.playAlarm.bind(this);
 		this.startBreak = this.startBreak.bind(this);
+		this.stopPomodoroCycle = this.stopPomodoroCycle.bind(this);
+	}
+
+	stopPomodoroCycle() {
+		clearInterval(this.state.id);
+		
+		this.setState({
+			current: 0,
+			timerLength: Constants.POMODORO_LENGTH,
+			active: false,
+			readyForBreak: false,
+			onShortBreak: false,
+			onLongBreak: false,
+			theme: createMuiTheme({
+				palette: {
+					primary: green,
+				},
+			}),
+			id: null,
+		})
 	}
 
 	playAlarm() {
@@ -203,7 +223,7 @@ class Timer extends Component {
 							</Button>
 						)}
 					</ThemeProvider>
-					<TimerActions></TimerActions>
+					<TimerActions stopPomodoroCycle={this.stopPomodoroCycle}></TimerActions>
 				</div>
 
 				<Streaks
