@@ -6,6 +6,7 @@ import { green, red } from "@material-ui/core/colors";
 
 import TimerView from "./TimerView/TimerView";
 import Streaks from "./Streaks/Streaks";
+import TimerActions from "./TimerActions/TimerActions";
 
 import "./Timer.scss";
 
@@ -173,8 +174,6 @@ class Timer extends Component {
 	}
 
 	render() {
-		console.log("i am not cool");
-
 		return (
 			<div className='timer'>
 				<audio id='audio' src='./done.mp3' type='audio/mpeg'></audio>
@@ -210,6 +209,8 @@ class Timer extends Component {
 					completedPomodoros={
 						this.state.completedPomodoros
 					}></Streaks>
+
+				<TimerActions></TimerActions>
 			</div>
 		);
 	}
