@@ -36,6 +36,7 @@ class TimerActions extends Component {
 		return (
 			<div className='timer-actions'>
 				<IconButton
+					className='timer-actions-button'
 					aria-controls='simple-menu'
 					aria-haspopup='true'
 					onClick={this.toggleMenu}>

@@ -3,17 +3,14 @@
 	height: 20px;
 	margin: auto;
 
-	.streak {
+	.fa-fire-alt {
 		height: 20px;
 		padding-top: 16px;
 		font-size: 20px;
+		color: orange;
 
-		.fa-fire-alt {
-			color: orange;
-
-			&:not(:first-child) {
-				margin-left: 8px;
-			}
+		&:not(:first-child) {
+			margin-left: 8px;
 		}
 	}
 }

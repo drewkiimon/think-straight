@@ -138,7 +138,8 @@ class Timer extends Component {
 		} else if (
 			!this.state.onShortBreak &&
 			!this.state.onLongBreak &&
-			this.state.current === Constants.POMODORO_LENGTH
+			this.state.current === 3
+			// this.state.current === Constants.POMODORO_LENGTH
 		) {
 			this.playAlarm();
 
