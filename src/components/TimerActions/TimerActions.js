@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import Timer from "../Timer";
 
 class TimerActions extends Component {
 	constructor(props) {
@@ -15,7 +14,6 @@ class TimerActions extends Component {
 		this.toggleMenu = this.toggleMenu.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 	}
-	// const [anchorEl, setAnchorEl] = React.useState(null);
 
 	toggleMenu(event) {
 		this.setState({ isOpen: event.currentTarget });
@@ -28,21 +26,23 @@ class TimerActions extends Component {
 	render() {
 		return (
 			<div>
-				<Button
+				<IconButton
 					aria-controls='simple-menu'
 					aria-haspopup='true'
 					onClick={this.toggleMenu}>
-					Open Menu
-				</Button>
+					<i className='far fa-caret-square-down'></i>
+				</IconButton>
 				<Menu
 					id='simple-menu'
 					anchorEl={this.state.isOpen}
 					keepMounted
 					open={Boolean(this.state.isOpen)}
 					onClose={this.handleClose}>
-					<MenuItem onClick={this.handleClose}>Profile</MenuItem>
-					<MenuItem onClick={this.handleClose}>My account</MenuItem>
-					<MenuItem onClick={this.handleClose}>Logout</MenuItem>
+					<MenuItem onClick={this.handleClose}>Start Cycle</MenuItem>
+					<MenuItem onClick={this.handleClose}>Stop</MenuItem>
+					<MenuItem onClick={this.handleClose}>
+						Restart Cycle
+					</MenuItem>
 				</Menu>
 			</div>
 		);
