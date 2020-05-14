@@ -9,6 +9,7 @@ export const TAKING_A_BREATHER = "taking a breather.";
 
 export const THINK_STRAIGHT_KEY = "thinkstraight_";
 export const DATE = "DATE";
+export const COMPLETED = "COMPLETED";
 
 export const POMODORO_LENGTH = 1500; // 25 * 60
 export const SHORT_BREAK_LENGTH = 300; // 5 * 60

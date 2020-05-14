@@ -40,11 +40,25 @@ class Timer extends Component {
 
 	componentDidMount() {
 		let today = moment().format("l"),
-			key = Constants.THINK_STRAIGHT_KEY + Constants.DATE + today;
+			dailyCheckKey =
+				Constants.THINK_STRAIGHT_KEY + Constants.DATE + today,
+			pomodorosDoneToday =
+				Constants.THINK_STRAIGHT_KEY +
+				Constants.COMPLETED +
+				Constants.DATE +
+				today;
 
-		if (!localStorage.getItem(key)) {
-			localStorage.setItem(key, today);
+		if (!localStorage.getItem(dailyCheckKey)) {
+			localStorage.setItem(dailyCheckKey, today);
 			// Add a "Snackbar" from material UI to say if they're on a streak or not
+		}
+
+		if (localStorage.getItem(pomodorosDoneToday)) {
+			this.setState({
+				completedPomodoros: parseInt(
+					localStorage.getItem(pomodorosDoneToday)
+				),
+			});
 		}
 	}
 
@@ -88,32 +102,10 @@ class Timer extends Component {
 		});
 
 		if (
-			this.state.onShortBreak &&
-			this.state.current === Constants.SHORT_BREAK_LENGTH
-		) {
-			this.playAlarm();
-
-			document.title = Constants.LETS_GO;
-
-			clearInterval(this.state.id);
-
-			this.setState({
-				timerLength: Constants.POMODORO_LENGTH,
-				current: 0,
-				active: false,
-				readyForBreak: false,
-				onShortBreak: false,
-				onLongBreak: false,
-				theme: createMuiTheme({
-					palette: {
-						primary: green,
-					},
-				}),
-				id: null,
-			});
-		} else if (
-			this.state.onLongBreak &&
-			this.state.current === Constants.LONG_BREAK_LENGTH
+			(this.state.onShortBreak &&
+				this.state.current === Constants.SHORT_BREAK_LENGTH) ||
+			(this.state.onLongBreak &&
+				this.state.current === Constants.LONG_BREAK_LENGTH)
 		) {
 			this.playAlarm();
 
@@ -158,6 +150,23 @@ class Timer extends Component {
 				readyForBreak: true,
 				completedPomodoros: this.state.completedPomodoros + 1,
 			});
+
+			// Local Storage of Pomodoros
+			let today = moment().format("l"),
+				key =
+					Constants.THINK_STRAIGHT_KEY +
+					Constants.COMPLETED +
+					Constants.DATE +
+					today;
+
+			if (!localStorage.getItem(key)) {
+				localStorage.setItem(key, 1);
+			} else {
+				localStorage.setItem(
+					key,
+					parseInt(localStorage.getItem(key)) + 1
+				);
+			}
 		}
 	}
 
