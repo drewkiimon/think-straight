@@ -28,7 +28,7 @@ const Timer = () => {
 	// 	}),
 	// 	id: null,
 	// };
-
+	console.log('AAA yeetus')
 	const [timerLength, setTimerLength] = useState(Constants.POMODORO_LENGTH);
 	const [timeElapsed, setTimeElapsed] = useState(0);
 	const [completedPomodoros, setCompletedPomodoros] = useState(0);
@@ -76,6 +76,21 @@ const Timer = () => {
 			});
 	};
 
+	const resetTimer = () => {
+		setTimeElapsed(0);
+		setTimerLength(Constants.POMODORO_LENGTH);
+		setIsTimerActive(false);
+		setIsReadyForBreak(false);
+		setIsOnShortBreak(false);
+		setIsOnLongBreak(false);
+		setButtonTheme(createMuiTheme({
+			palette: {
+				primary: green,
+			},
+		}));
+		setIntervalId(null);
+	};
+
 	const stopPomodoroCycle = () => {
 		document.title = Constants.THINK_STRAIGHT;
 
@@ -99,22 +114,8 @@ const Timer = () => {
 		resetTimer();
 	};
 
-	const resetTimer = () => {
-		setTimeElapsed(0);
-		setTimerLength(Constants.POMODORO_LENGTH);
-		setIsTimerActive(false);
-		setIsReadyForBreak(false);
-		setIsOnShortBreak(false);
-		setIsOnLongBreak(false);
-		setButtonTheme(createMuiTheme({
-			palette: {
-				primary: green,
-			},
-		}));
-		setIntervalId(null);
-	};
-
 	const incrementTimer = () => {
+		console.log('AAA look at me', timeElapsed);
 		setTimeElapsed(timeElapsed + 1);
 		// this.setState({
 		// 	current: this.state.current + 1,
@@ -159,17 +160,27 @@ const Timer = () => {
 
 			clearInterval(intervalId);
 
-			this.setState({
-				active: false,
-				current: 0,
-				theme: createMuiTheme({
-					palette: {
-						primary: isTimerActive ? green : red,
-					},
-				}),
-				readyForBreak: true,
-				completedPomodoros: completedPomodoros + 1,
-			});
+			// this.setState({
+			// 	active: false,
+			// 	current: 0,
+			// 	theme: createMuiTheme({
+			// 		palette: {
+			// 			primary: isTimerActive ? green : red,
+			// 		},
+			// 	}),
+			// 	readyForBreak: true,
+			// 	completedPomodoros: completedPomodoros + 1,
+			// });
+
+			setIsTimerActive(false);
+			setTimeElapsed(0);
+			setButtonTheme(createMuiTheme({
+				palette: {
+					primary: isTimerActive ? green : red,
+				},
+			}));
+			setIsReadyForBreak(true);
+			setCompletedPomodoros(completedPomodoros + 1);
 
 			// Local Storage of Pomodoros
 			let today = moment().format("l"),
@@ -211,36 +222,51 @@ const Timer = () => {
 			document.title = Constants.PAUSED;
 			clearInterval(intervalId);
 		} else {
-			document.title = Constants.FOCUSING;
 			var refreshIntervalId = setInterval(incrementTimer, 1000);
+
+			document.title = Constants.FOCUSING;
+
 			setIntervalId(refreshIntervalId);
 			// this.setState({ id: refreshIntervalId });
 		}
 	};
 
 	const startBreak = () => {
-		let breakType = completedPomodoros % 4 === 0 ? "LONG" : "SHORT";
+		let breakType = completedPomodoros % 4 === 0 ? "LONG" : "SHORT",
+			refreshIntervalId = setInterval(incrementTimer, 1000);
 
 		document.title = Constants.TAKING_A_BREATHER;
 
-		var refreshIntervalId = setInterval(incrementTimer, 1000);
-
-		this.setState({
-			active: true,
-			id: refreshIntervalId,
-			onLongBreak: breakType === "LONG",
-			onShortBreak: breakType === "SHORT",
-			readyForBreak: false,
-			timerLength:
-				breakType === "SHORT"
-					? Constants.SHORT_BREAK_LENGTH
-					: Constants.LONG_BREAK_LENGTH,
-			theme: createMuiTheme({
-				palette: {
-					primary: red,
-				},
-			}),
-		});
+		// this.setState({
+			// active: true,
+			// id: refreshIntervalId,
+			// onLongBreak: breakType === "LONG",
+			// onShortBreak: breakType === "SHORT",
+			// readyForBreak: false,
+			// timerLength:
+			// 	breakType === "SHORT"
+			// 		? Constants.SHORT_BREAK_LENGTH
+			// 		: Constants.LONG_BREAK_LENGTH,
+		// 	theme: createMuiTheme({
+		// 		palette: {
+		// 			primary: red,
+		// 		},
+		// 	}),
+		// });
+		console.log('AAA yeet')
+		setIsTimerActive(true);
+		setTimeElapsed(0);
+		setIsOnShortBreak(breakType === "SHORT");
+		setIsOnLongBreak(breakType === "LONG");
+		setIsReadyForBreak(false);
+		setTimerLength(	breakType === "SHORT" ? Constants.SHORT_BREAK_LENGTH : Constants.LONG_BREAK_LENGTH);
+		setIsReadyForBreak(false);
+		setButtonTheme(createMuiTheme({
+			palette: {
+				primary: red,
+			},
+		}));
+		setIntervalId(refreshIntervalId);
 	};
 
 	return (
