@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import * as Constants from "../constants/constants";
 import moment from "moment";
 import Button from "@material-ui/core/Button";
@@ -12,34 +12,39 @@ import TimerActions from "./TimerActions/TimerActions";
 
 import "./Timer.scss";
 
-class Timer extends Component {
-	constructor(props) {
-		super(props);
+const Timer = () => {
+	// this.state = {
+	// 	timerLength: Constants.POMODORO_LENGTH,
+	// 	current: 0,
+	// 	completedPomodoros: 0,
+	// 	active: false,
+	// 	readyForBreak: false,
+	// 	onShortBreak: false,
+	// 	onLongBreak: false,
+	// 	theme: createMuiTheme({
+	// 		palette: {
+	// 			primary: green,
+	// 		},
+	// 	}),
+	// 	id: null,
+	// };
 
-		this.state = {
-			timerLength: Constants.POMODORO_LENGTH,
-			current: 0,
-			completedPomodoros: 0,
-			active: false,
-			readyForBreak: false,
-			onShortBreak: false,
-			onLongBreak: false,
-			theme: createMuiTheme({
-				palette: {
-					primary: green,
-				},
-			}),
-			id: null,
-		};
+	const [timerLength, setTimerLength] = useState(Constants.POMODORO_LENGTH);
+	const [timeElapsed, setTimeElapsed] = useState(0);
+	const [completedPomodoros, setCompletedPomodoros] = useState(0);
+	const [isTimerActive, setIsTimerActive] = useState(false);
+	const [isReadyForBreak, setIsReadyForBreak] = useState(false);
+	const [isOnShortBreak, setIsOnShortBreak] = useState(false);
+	const [isOnLongBreak, setIsOnLongBreak] = useState(false);
+	const [buttonTheme, setButtonTheme] = useState(createMuiTheme({
+		palette: {
+			primary: green,
+		},
+	}));
+	const [intervalId, setIntervalId] = useState(null);
 
-		this.toggleTimer = this.toggleTimer.bind(this);
-		this.incrementTimer = this.incrementTimer.bind(this);
-		this.playAlarm = this.playAlarm.bind(this);
-		this.startBreak = this.startBreak.bind(this);
-		this.stopPomodoroCycle = this.stopPomodoroCycle.bind(this);
-	}
-
-	componentDidMount() {
+	// componentDidMount
+	useEffect(() => {
 		let today = moment().format("l"),
 			dailyCheckKey =
 				Constants.THINK_STRAIGHT_KEY + Constants.DATE + today,
@@ -55,100 +60,115 @@ class Timer extends Component {
 		}
 
 		if (localStorage.getItem(pomodorosDoneToday)) {
-			this.setState({
-				completedPomodoros: parseInt(
-					localStorage.getItem(pomodorosDoneToday)
-				),
-			});
+			setCompletedPomodoros(parseInt(localStorage.getItem(pomodorosDoneToday)));
 		}
-	}
+	}, []) 
 
-	playAlarm() {
+	const playAlarm = () => {
 		var audio = document.getElementById("audio");
 
-		audio
-			.play()
+		audio.play()
 			.then(function () {
 				console.log("Playback successful");
 			})
 			.catch(function (err) {
 				console.log("Playback error:", err);
 			});
-	}
+	};
 
-	stopPomodoroCycle() {
+	const stopPomodoroCycle = () => {
 		document.title = Constants.THINK_STRAIGHT;
 
-		clearInterval(this.state.id);
+		clearInterval(intervalId);
 
-		this.setState({
-			current: 0,
-			timerLength: Constants.POMODORO_LENGTH,
-			active: false,
-			readyForBreak: false,
-			onShortBreak: false,
-			onLongBreak: false,
-			theme: createMuiTheme({
-				palette: {
-					primary: green,
-				},
-			}),
-			id: null,
-		});
-	}
+		// this.setState({
+			// current: 0,
+			// timerLength: Constants.POMODORO_LENGTH,
+			// active: false,
+		// 	readyForBreak: false,
+		// 	onShortBreak: false,
+		// 	onLongBreak: false,
+		// 	theme: createMuiTheme({
+		// 		palette: {
+		// 			primary: green,
+		// 		},
+		// 	}),
+		// 	id: null,
+		// });
 
-	incrementTimer() {
-		this.setState({
-			current: this.state.current + 1,
-		});
+		resetTimer();
+	};
+
+	const resetTimer = () => {
+		setTimeElapsed(0);
+		setTimerLength(Constants.POMODORO_LENGTH);
+		setIsTimerActive(false);
+		setIsReadyForBreak(false);
+		setIsOnShortBreak(false);
+		setIsOnLongBreak(false);
+		setButtonTheme(createMuiTheme({
+			palette: {
+				primary: green,
+			},
+		}));
+		setIntervalId(null);
+	};
+
+	const incrementTimer = () => {
+		setTimeElapsed(timeElapsed + 1);
+		// this.setState({
+		// 	current: this.state.current + 1,
+		// });
 
 		if (
-			(this.state.onShortBreak &&
-				this.state.current === Constants.SHORT_BREAK_LENGTH) ||
-			(this.state.onLongBreak &&
-				this.state.current === Constants.LONG_BREAK_LENGTH)
+			(isOnShortBreak &&
+				timeElapsed === Constants.SHORT_BREAK_LENGTH) ||
+			(isOnLongBreak &&
+				timeElapsed === Constants.LONG_BREAK_LENGTH)
 		) {
-			this.playAlarm();
+			playAlarm();
 
 			document.title = Constants.LETS_GO;
 
-			clearInterval(this.state.id);
+			clearInterval(intervalId);
 
-			this.setState({
-				timerLength: Constants.POMODORO_LENGTH,
-				current: 0,
-				active: false,
-				readyForBreak: false,
-				onShortBreak: false,
-				onLongBreak: false,
-				theme: createMuiTheme({
-					palette: {
-						primary: green,
-					},
-				}),
-				id: null,
-			});
+			// this.setState({
+			// 	timerLength: Constants.POMODORO_LENGTH,
+			// 	current: 0,
+			// 	active: false,
+			// 	readyForBreak: false,
+			// 	onShortBreak: false,
+			// 	onLongBreak: false,
+			// 	theme: createMuiTheme({
+			// 		palette: {
+			// 			primary: green,
+			// 		},
+			// 	}),
+			// 	id: null,
+			// });
+
+			resetTimer();
 		} else if (
-			!this.state.onShortBreak &&
-			!this.state.onLongBreak &&
-			this.state.current === Constants.POMODORO_LENGTH
+			!isOnShortBreak &&
+			!isOnLongBreak &&
+			timeElapsed === Constants.POMODORO_LENGTH
 		) {
-			this.playAlarm();
+			playAlarm();
 
 			document.title = Constants.THINK_STRAIGHT;
 
-			clearInterval(this.state.id);
+			clearInterval(intervalId);
 
 			this.setState({
 				active: false,
 				current: 0,
 				theme: createMuiTheme({
 					palette: {
-						primary: this.state.active ? green : red,
+						primary: isTimerActive ? green : red,
 					},
 				}),
 				readyForBreak: true,
-				completedPomodoros: this.state.completedPomodoros + 1,
+				completedPomodoros: completedPomodoros + 1,
 			});
 
 			// Local Storage of Pomodoros
@@ -170,33 +190,40 @@ class Timer extends Component {
 		}
 	}
 
-	toggleTimer() {
-		this.setState({
-			active: !this.state.active,
-			theme: createMuiTheme({
-				palette: {
-					primary: this.state.active ? green : red,
-				},
-			}),
-		});
+	const toggleTimer = () => {
+		setIsTimerActive(!isTimerActive);
+		setButtonTheme(createMuiTheme({
+			palette: {
+				primary: isTimerActive ? green : red,
+			}
+		}));
 
-		if (this.state.active) {
+		// this.setState({
+		// 	active: !this.state.active,
+		// 	theme: createMuiTheme({
+		// 		palette: {
+		// 			primary: this.state.active ? green : red,
+		// 		},
+		// 	}),
+		// });
+
+		if (isTimerActive) {
 			document.title = Constants.PAUSED;
-			clearInterval(this.state.id);
+			clearInterval(intervalId);
 		} else {
 			document.title = Constants.FOCUSING;
-			var refreshIntervalId = setInterval(this.incrementTimer, 1000);
-			this.setState({ id: refreshIntervalId });
+			var refreshIntervalId = setInterval(incrementTimer, 1000);
+			setIntervalId(refreshIntervalId);
+			// this.setState({ id: refreshIntervalId });
 		}
-	}
+	};
 
-	startBreak() {
-		let breakType =
-			this.state.completedPomodoros % 4 === 0 ? "LONG" : "SHORT";
+	const startBreak = () => {
+		let breakType = completedPomodoros % 4 === 0 ? "LONG" : "SHORT";
 
 		document.title = Constants.TAKING_A_BREATHER;
 
-		var refreshIntervalId = setInterval(this.incrementTimer, 1000);
+		var refreshIntervalId = setInterval(incrementTimer, 1000);
 
 		this.setState({
 			active: true,
@@ -214,51 +241,47 @@ class Timer extends Component {
 				},
 			}),
 		});
-	}
+	};
 
-	render() {
-		return (
-			<div className='timer'>
-				<audio id='audio' src='./done.mp3' type='audio/mpeg'></audio>
+	return (
+		<div className='timer'>
+			<audio id='audio' src='./done.mp3' type='audio/mpeg'></audio>
 
-				<TimerView
-					timerLength={this.state.timerLength}
-					readyForBreak={this.state.readyForBreak}
-					current={this.state.current}></TimerView>
+			<TimerView
+				timerLength={timerLength}
+				readyForBreak={isReadyForBreak}
+				current={timeElapsed}></TimerView>
 
-				<div className='timer-button' lg={3} md={4} sm={7} xs={8}>
-					<ThemeProvider theme={this.state.theme}>
-						{this.state.readyForBreak ? (
-							<Button
-								className='timer-action-button'
-								variant='contained'
-								color='primary'
-								onClick={this.startBreak}>
-								{this.state.active ? "Pause" : "Start Break"}
-							</Button>
-						) : (
-							<Button
-								className='timer-action-button'
-								variant='contained'
-								color='primary'
-								onClick={this.toggleTimer}>
-								{this.state.active ? "Pause" : "Start"}
-							</Button>
-						)}
-					</ThemeProvider>
-					<TimerActions
-						stopPomodoroCycle={
-							this.stopPomodoroCycle
-						}></TimerActions>
-				</div>
-
-				<Streaks
-					completedPomodoros={
-						this.state.completedPomodoros
-					}></Streaks>
+			<div className='timer-button' lg={3} md={4} sm={7} xs={8}>
+				<ThemeProvider theme={buttonTheme}>
+					{isReadyForBreak ? (
+						<Button
+							className='timer-action-button'
+							variant='contained'
+							color='primary'
+							onClick={startBreak}>
+							{isTimerActive ? "Pause" : "Start Break"}
+						</Button>
+					) : (
+						<Button
+							className='timer-action-button'
+							variant='contained'
+							color='primary'
+							onClick={toggleTimer}>
+							{isTimerActive ? "Pause" : "Start"}
+						</Button>
+					)}
+				</ThemeProvider>
+				<TimerActions
+					stopPomodoroCycle={
+						stopPomodoroCycle
+					}></TimerActions>
 			</div>
-		);
-	}
+
+			<Streaks
+				completedPomodoros={completedPomodoros}></Streaks>
+		</div>
+	);
 }
 
 export default Timer;
