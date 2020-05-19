@@ -69,7 +69,7 @@ class Timer extends Component {
 		audio
 			.play()
 			.then(function () {
-				console.log("Playback success");
+				console.log("Playback successful");
 			})
 			.catch(function (err) {
 				console.log("Playback error:", err);
