@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import * as Constants from "../../constants/constants";
 
 import "./TimerView.scss";
 
-class TimerView extends Component {
-	getTime() {
-		var timeElapsed = this.props.timerLength - this.props.current,
+const TimerView = (props) => {
+	const getTime = () => {
+		var timeElapsed = props.timerLength - props.current,
 			minutes = (timeElapsed / 60) | 0,
 			seconds =
 				String(timeElapsed % 60).length === 1
@@ -15,13 +15,11 @@ class TimerView extends Component {
 		return minutes + ":" + seconds;
 	}
 
-	render() {
-		return (
-			<div className='timer-view'>
-				{this.props.readyForBreak ? Constants.BREAK : this.getTime()}
-			</div>
-		);
-	}
+	return (
+		<div className='timer-view'>
+			{props.readyForBreak ? Constants.BREAK : getTime()}
+		</div>
+	);
 }
 
 export default TimerView;
