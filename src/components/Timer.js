@@ -13,22 +13,6 @@ import TimerActions from "./TimerActions/TimerActions";
 import "./Timer.scss";
 
 const Timer = () => {
-	// this.state = {
-	// 	timerLength: Constants.POMODORO_LENGTH,
-	// 	current: 0,
-	// 	completedPomodoros: 0,
-	// 	active: false,
-	// 	readyForBreak: false,
-	// 	onShortBreak: false,
-	// 	onLongBreak: false,
-	// 	theme: createMuiTheme({
-	// 		palette: {
-	// 			primary: green,
-	// 		},
-	// 	}),
-	// 	id: null,
-	// };
-	console.log('AAA yeetus')
 	const [timerLength, setTimerLength] = useState(Constants.POMODORO_LENGTH);
 	const [timeElapsed, setTimeElapsed] = useState(0);
 	const [completedPomodoros, setCompletedPomodoros] = useState(0);
@@ -36,14 +20,13 @@ const Timer = () => {
 	const [isReadyForBreak, setIsReadyForBreak] = useState(false);
 	const [isOnShortBreak, setIsOnShortBreak] = useState(false);
 	const [isOnLongBreak, setIsOnLongBreak] = useState(false);
+	const [intervalId, setIntervalId] = useState(null);
 	const [buttonTheme, setButtonTheme] = useState(createMuiTheme({
 		palette: {
 			primary: green,
 		},
 	}));
-	const [intervalId, setIntervalId] = useState(null);
 
-	// componentDidMount
 	useEffect(() => {
 		let today = moment().format("l"),
 			dailyCheckKey =
@@ -62,7 +45,54 @@ const Timer = () => {
 		if (localStorage.getItem(pomodorosDoneToday)) {
 			setCompletedPomodoros(parseInt(localStorage.getItem(pomodorosDoneToday)));
 		}
-	}, []) 
+	}, []);
+
+	useEffect(() => {
+		if ((isOnShortBreak && timeElapsed === Constants.SHORT_BREAK_LENGTH) ||
+			(isOnLongBreak && timeElapsed === Constants.LONG_BREAK_LENGTH)
+		) {
+			playAlarm();
+
+			document.title = Constants.LETS_GO;
+
+			clearInterval(intervalId);
+
+			resetTimer();
+		} else if (!isOnShortBreak && !isOnLongBreak && timeElapsed === Constants.POMODORO_LENGTH) {
+			playAlarm();
+
+			document.title = Constants.THINK_STRAIGHT;
+
+			clearInterval(intervalId);
+
+			setIsTimerActive(false);
+			setTimeElapsed(0);
+			setIsReadyForBreak(true);
+			setCompletedPomodoros(completedPomodoros + 1);
+			setButtonTheme(createMuiTheme({
+				palette: {
+					primary: isTimerActive ? green : red,
+				},
+			}));
+
+			let today = moment().format("l"),
+				key =
+					Constants.THINK_STRAIGHT_KEY +
+					Constants.COMPLETED +
+					Constants.DATE +
+					today;
+
+			if (!localStorage.getItem(key)) {
+				localStorage.setItem(key, 1);
+			} else {
+				localStorage.setItem(
+					key,
+					parseInt(localStorage.getItem(key)) + 1
+				);
+			}
+		}
+	// eslint-disable-next-line
+	}, [timeElapsed]);
 
 	const playAlarm = () => {
 		var audio = document.getElementById("audio");
@@ -96,109 +126,12 @@ const Timer = () => {
 
 		clearInterval(intervalId);
 
-		// this.setState({
-			// current: 0,
-			// timerLength: Constants.POMODORO_LENGTH,
-			// active: false,
-		// 	readyForBreak: false,
-		// 	onShortBreak: false,
-		// 	onLongBreak: false,
-		// 	theme: createMuiTheme({
-		// 		palette: {
-		// 			primary: green,
-		// 		},
-		// 	}),
-		// 	id: null,
-		// });
-
 		resetTimer();
 	};
 
 	const incrementTimer = () => {
-		console.log('AAA look at me', timeElapsed);
-		setTimeElapsed(timeElapsed + 1);
-		// this.setState({
-		// 	current: this.state.current + 1,
-		// });
-
-		if (
-			(isOnShortBreak &&
-				timeElapsed === Constants.SHORT_BREAK_LENGTH) ||
-			(isOnLongBreak &&
-				timeElapsed === Constants.LONG_BREAK_LENGTH)
-		) {
-			playAlarm();
-
-			document.title = Constants.LETS_GO;
-
-			clearInterval(intervalId);
-
-			// this.setState({
-			// 	timerLength: Constants.POMODORO_LENGTH,
-			// 	current: 0,
-			// 	active: false,
-			// 	readyForBreak: false,
-			// 	onShortBreak: false,
-			// 	onLongBreak: false,
-			// 	theme: createMuiTheme({
-			// 		palette: {
-			// 			primary: green,
-			// 		},
-			// 	}),
-			// 	id: null,
-			// });
-
-			resetTimer();
-		} else if (
-			!isOnShortBreak &&
-			!isOnLongBreak &&
-			timeElapsed === Constants.POMODORO_LENGTH
-		) {
-			playAlarm();
-
-			document.title = Constants.THINK_STRAIGHT;
-
-			clearInterval(intervalId);
-
-			// this.setState({
-			// 	active: false,
-			// 	current: 0,
-			// 	theme: createMuiTheme({
-			// 		palette: {
-			// 			primary: isTimerActive ? green : red,
-			// 		},
-			// 	}),
-			// 	readyForBreak: true,
-			// 	completedPomodoros: completedPomodoros + 1,
-			// });
-
-			setIsTimerActive(false);
-			setTimeElapsed(0);
-			setButtonTheme(createMuiTheme({
-				palette: {
-					primary: isTimerActive ? green : red,
-				},
-			}));
-			setIsReadyForBreak(true);
-			setCompletedPomodoros(completedPomodoros + 1);
-
-			// Local Storage of Pomodoros
-			let today = moment().format("l"),
-				key =
-					Constants.THINK_STRAIGHT_KEY +
-					Constants.COMPLETED +
-					Constants.DATE +
-					today;
-
-			if (!localStorage.getItem(key)) {
-				localStorage.setItem(key, 1);
-			} else {
-				localStorage.setItem(
-					key,
-					parseInt(localStorage.getItem(key)) + 1
-				);
-			}
-		}
+		// prev needed for incrementing with timer... idk why
+		setTimeElapsed(prevTimeElapsed => prevTimeElapsed + 1);
 	}
 
 	const toggleTimer = () => {
@@ -209,15 +142,6 @@ const Timer = () => {
 			}
 		}));
 
-		// this.setState({
-		// 	active: !this.state.active,
-		// 	theme: createMuiTheme({
-		// 		palette: {
-		// 			primary: this.state.active ? green : red,
-		// 		},
-		// 	}),
-		// });
-
 		if (isTimerActive) {
 			document.title = Constants.PAUSED;
 			clearInterval(intervalId);
@@ -227,7 +151,6 @@ const Timer = () => {
 			document.title = Constants.FOCUSING;
 
 			setIntervalId(refreshIntervalId);
-			// this.setState({ id: refreshIntervalId });
 		}
 	};
 
@@ -237,23 +160,6 @@ const Timer = () => {
 
 		document.title = Constants.TAKING_A_BREATHER;
 
-		// this.setState({
-			// active: true,
-			// id: refreshIntervalId,
-			// onLongBreak: breakType === "LONG",
-			// onShortBreak: breakType === "SHORT",
-			// readyForBreak: false,
-			// timerLength:
-			// 	breakType === "SHORT"
-			// 		? Constants.SHORT_BREAK_LENGTH
-			// 		: Constants.LONG_BREAK_LENGTH,
-		// 	theme: createMuiTheme({
-		// 		palette: {
-		// 			primary: red,
-		// 		},
-		// 	}),
-		// });
-		console.log('AAA yeet')
 		setIsTimerActive(true);
 		setTimeElapsed(0);
 		setIsOnShortBreak(breakType === "SHORT");
