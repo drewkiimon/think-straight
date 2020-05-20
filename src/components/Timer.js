@@ -48,6 +48,7 @@ const Timer = () => {
 	}, []);
 
 	useEffect(() => {
+		// Runs on load when I don't want it to :(
 		if ((isOnShortBreak && timeElapsed === Constants.SHORT_BREAK_LENGTH) ||
 			(isOnLongBreak && timeElapsed === Constants.LONG_BREAK_LENGTH)
 		) {
