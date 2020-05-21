@@ -122,6 +122,18 @@ const Timer = () => {
 		setIntervalId(null);
 	};
 
+	const clearPomodoros = () => {
+		let today = moment().format("l"),
+			pomodorosDoneToday =
+				Constants.THINK_STRAIGHT_KEY +
+				Constants.COMPLETED +
+				Constants.DATE +
+				today;
+
+		localStorage.setItem(pomodorosDoneToday, 0);
+		setCompletedPomodoros(0);
+	};
+
 	const stopPomodoroCycle = () => {
 		document.title = Constants.THINK_STRAIGHT;
 
@@ -206,9 +218,8 @@ const Timer = () => {
 					)}
 				</ThemeProvider>
 				<TimerActions
-					stopPomodoroCycle={
-						stopPomodoroCycle
-					}></TimerActions>
+					clearPomodoros={ clearPomodoros }
+					stopPomodoroCycle={ stopPomodoroCycle }></TimerActions>
 			</div>
 
 			<Streaks

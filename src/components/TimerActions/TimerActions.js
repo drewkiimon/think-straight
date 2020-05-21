@@ -43,7 +43,8 @@ const TimerActions = props => {
 	};
 
 	const handleRemovePomodoros = () => {
-		console.log('Removing stuff');
+		props.clearPomodoros();
+
 		handleCloseModal();
 		handleCloseMenu();
 	};
