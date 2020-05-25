@@ -6,7 +6,8 @@ import * as Constants from "./../../constants/constants";
 import {Button, Menu, MenuItem, IconButton} from "@material-ui/core/";
 
 // For modal
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createMuiTheme, ThemeProvider  } from '@material-ui/core/styles';
+import { red } from "@material-ui/core/colors";
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
@@ -32,13 +33,17 @@ const TimerActions = props => {
 
 	const [isOpen, setIsOpen] = useState(null);
 	const [isModalOpen, setIsModalOpen] = React.useState(false);
+	const redTheme = createMuiTheme({
+		palette: {
+			primary: red,
+		},
+	});
 
 	const handleOpenModal = () => {
 		setIsModalOpen(true);
 	};
   
 	const handleCloseModal = () => {
-		console.log('yes');
 		setIsModalOpen(false);
 	};
 
@@ -78,15 +83,19 @@ const TimerActions = props => {
 			>
 				<Fade in={isModalOpen}>
 					<div className={classes.paper}>
-						<h2 id="transition-modal-title">Remove Today's Completed Pomodoros</h2>
-						<p id="transition-modal-description">This cannot be undone</p>
-
+						<h2 id="transition-modal-title">remove completed</h2>
+						<p id="transition-modal-description">this cannot be undone</p>
+						<ThemeProvider theme={redTheme}>
+							<Button
+								variant='contained'
+								color='primary'
+								onClick={handleRemovePomodoros}>
+								remove.
+							</Button>
+						</ThemeProvider>
 						<Button
-							className='timer-action-button'
-							variant='contained'
-							color='primary'
-							onClick={handleRemovePomodoros}>
-							Remove
+							onClick={handleCloseModal}>
+							nevermind.
 						</Button>
 					</div>
 				</Fade>
@@ -109,7 +118,7 @@ const TimerActions = props => {
 					{Constants.RESET}
 				</MenuItem>
 				<MenuItem onClick={handleOpenModal}>
-					Remove pls
+					remove completed.
 				</MenuItem>
 			</Menu>
 		</div>
