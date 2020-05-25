@@ -14,6 +14,7 @@ import "./Timer.scss";
 
 const Timer = () => {
 	const [timerLength, setTimerLength] = useState(Constants.POMODORO_LENGTH);
+	const [timerStartTime, setTimerStartTime] = useState(null);
 	const [timeElapsed, setTimeElapsed] = useState(0);
 	const [completedPomodoros, setCompletedPomodoros] = useState(0);
 	const [isTimerActive, setIsTimerActive] = useState(false);
@@ -48,7 +49,6 @@ const Timer = () => {
 	}, []);
 
 	useEffect(() => {
-		// Runs on load when I don't want it to :(
 		if ((isOnShortBreak && timeElapsed === Constants.SHORT_BREAK_LENGTH) ||
 			(isOnLongBreak && timeElapsed === Constants.LONG_BREAK_LENGTH)
 		) {
@@ -56,6 +56,7 @@ const Timer = () => {
 
 			document.title = Constants.LETS_GO;
 
+			setTimerStartTime(null);
 			clearInterval(intervalId);
 
 			resetTimer();
@@ -64,6 +65,7 @@ const Timer = () => {
 
 			document.title = Constants.THINK_STRAIGHT;
 
+			setTimerStartTime(null);
 			clearInterval(intervalId);
 
 			setIsTimerActive(false);
@@ -94,6 +96,21 @@ const Timer = () => {
 		}
 	// eslint-disable-next-line
 	}, [timeElapsed]);
+
+	useEffect(() => {
+		if (timerStartTime) {
+			var refreshIntervalId = setInterval(incrementTimer, 1000);
+
+			if (isOnShortBreak || isOnLongBreak) {
+				document.title = Constants.TAKING_A_BREATHER;
+			} else {
+				document.title = Constants.FOCUSING;
+			}
+
+			setIntervalId(refreshIntervalId);
+		}
+	// eslint-disable-next-line
+	}, [timerStartTime])
 
 	const playAlarm = () => {
 		var audio = document.getElementById("audio");
@@ -131,8 +148,9 @@ const Timer = () => {
 	};
 
 	const incrementTimer = () => {
-		// prev needed for incrementing with timer... idk why
-		setTimeElapsed(prevTimeElapsed => prevTimeElapsed + 1);
+		let delta = ((new Date() - timerStartTime) / 1000) | 0; // floor
+
+		setTimeElapsed(prevTimeElapsed => delta + timeElapsed);
 	}
 
 	const toggleTimer = () => {
@@ -145,22 +163,17 @@ const Timer = () => {
 
 		if (isTimerActive) {
 			document.title = Constants.PAUSED;
+			setTimerStartTime(null);
 			clearInterval(intervalId);
 		} else {
-			var refreshIntervalId = setInterval(incrementTimer, 1000);
-
-			document.title = Constants.FOCUSING;
-
-			setIntervalId(refreshIntervalId);
+			setTimerStartTime(new Date());
 		}
 	};
 
 	const startBreak = () => {
-		let breakType = completedPomodoros % 4 === 0 ? "LONG" : "SHORT",
-			refreshIntervalId = setInterval(incrementTimer, 1000);
+		let breakType = completedPomodoros % 4 === 0 ? "LONG" : "SHORT";
 
-		document.title = Constants.TAKING_A_BREATHER;
-
+		setTimerStartTime(new Date());
 		setIsTimerActive(true);
 		setTimeElapsed(0);
 		setIsOnShortBreak(breakType === "SHORT");
@@ -173,7 +186,6 @@ const Timer = () => {
 				primary: red,
 			},
 		}));
-		setIntervalId(refreshIntervalId);
 	};
 
 	return (
