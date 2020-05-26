@@ -22,11 +22,13 @@ const Timer = () => {
 	const [isOnShortBreak, setIsOnShortBreak] = useState(false);
 	const [isOnLongBreak, setIsOnLongBreak] = useState(false);
 	const [intervalId, setIntervalId] = useState(null);
-	const [buttonTheme, setButtonTheme] = useState(createMuiTheme({
-		palette: {
-			primary: green,
-		},
-	}));
+	const [buttonTheme, setButtonTheme] = useState(
+		createMuiTheme({
+			palette: {
+				primary: green,
+			},
+		})
+	);
 
 	useEffect(() => {
 		let today = moment().format("l"),
@@ -44,12 +46,15 @@ const Timer = () => {
 		}
 
 		if (localStorage.getItem(pomodorosDoneToday)) {
-			setCompletedPomodoros(parseInt(localStorage.getItem(pomodorosDoneToday)));
+			setCompletedPomodoros(
+				parseInt(localStorage.getItem(pomodorosDoneToday))
+			);
 		}
 	}, []);
 
 	useEffect(() => {
-		if ((isOnShortBreak && timeElapsed === Constants.SHORT_BREAK_LENGTH) ||
+		if (
+			(isOnShortBreak && timeElapsed === Constants.SHORT_BREAK_LENGTH) ||
 			(isOnLongBreak && timeElapsed === Constants.LONG_BREAK_LENGTH)
 		) {
 			playAlarm();
@@ -60,7 +65,11 @@ const Timer = () => {
 			clearInterval(intervalId);
 
 			resetTimer();
-		} else if (!isOnShortBreak && !isOnLongBreak && timeElapsed === Constants.POMODORO_LENGTH) {
+		} else if (
+			!isOnShortBreak &&
+			!isOnLongBreak &&
+			timeElapsed === Constants.POMODORO_LENGTH
+		) {
 			playAlarm();
 
 			document.title = Constants.THINK_STRAIGHT;
@@ -72,11 +81,13 @@ const Timer = () => {
 			setTimeElapsed(0);
 			setIsReadyForBreak(true);
 			setCompletedPomodoros(completedPomodoros + 1);
-			setButtonTheme(createMuiTheme({
-				palette: {
-					primary: isTimerActive ? green : red,
-				},
-			}));
+			setButtonTheme(
+				createMuiTheme({
+					palette: {
+						primary: isTimerActive ? green : red,
+					},
+				})
+			);
 
 			let today = moment().format("l"),
 				key =
@@ -94,12 +105,12 @@ const Timer = () => {
 				);
 			}
 		}
-	// eslint-disable-next-line
+		// eslint-disable-next-line
 	}, [timeElapsed]);
 
 	useEffect(() => {
 		if (timerStartTime) {
-			var refreshIntervalId = setInterval(incrementTimer, 1000);
+			var refreshIntervalId = setInterval(incrementTimer, 100);
 
 			if (isOnShortBreak || isOnLongBreak) {
 				document.title = Constants.TAKING_A_BREATHER;
@@ -109,13 +120,14 @@ const Timer = () => {
 
 			setIntervalId(refreshIntervalId);
 		}
-	// eslint-disable-next-line
-	}, [timerStartTime])
+		// eslint-disable-next-line
+	}, [timerStartTime]);
 
 	const playAlarm = () => {
 		var audio = document.getElementById("audio");
 
-		audio.play()
+		audio
+			.play()
 			.then(function () {
 				console.log("Playback successful");
 			})
@@ -131,11 +143,13 @@ const Timer = () => {
 		setIsReadyForBreak(false);
 		setIsOnShortBreak(false);
 		setIsOnLongBreak(false);
-		setButtonTheme(createMuiTheme({
-			palette: {
-				primary: green,
-			},
-		}));
+		setButtonTheme(
+			createMuiTheme({
+				palette: {
+					primary: green,
+				},
+			})
+		);
 		setIntervalId(null);
 	};
 
@@ -148,18 +162,20 @@ const Timer = () => {
 	};
 
 	const incrementTimer = () => {
-		let delta = ((new Date() - timerStartTime) / 1000) | 0; // floor
+		let delta = (new Date() - timerStartTime) | 0; // floor
 
-		setTimeElapsed(prevTimeElapsed => delta + timeElapsed);
-	}
+		setTimeElapsed((prevTimeElapsed) => delta + timeElapsed);
+	};
 
 	const toggleTimer = () => {
 		setIsTimerActive(!isTimerActive);
-		setButtonTheme(createMuiTheme({
-			palette: {
-				primary: isTimerActive ? green : red,
-			}
-		}));
+		setButtonTheme(
+			createMuiTheme({
+				palette: {
+					primary: isTimerActive ? green : red,
+				},
+			})
+		);
 
 		if (isTimerActive) {
 			document.title = Constants.PAUSED;
@@ -179,13 +195,19 @@ const Timer = () => {
 		setIsOnShortBreak(breakType === "SHORT");
 		setIsOnLongBreak(breakType === "LONG");
 		setIsReadyForBreak(false);
-		setTimerLength(	breakType === "SHORT" ? Constants.SHORT_BREAK_LENGTH : Constants.LONG_BREAK_LENGTH);
+		setTimerLength(
+			breakType === "SHORT"
+				? Constants.SHORT_BREAK_LENGTH
+				: Constants.LONG_BREAK_LENGTH
+		);
 		setIsReadyForBreak(false);
-		setButtonTheme(createMuiTheme({
-			palette: {
-				primary: red,
-			},
-		}));
+		setButtonTheme(
+			createMuiTheme({
+				palette: {
+					primary: red,
+				},
+			})
+		);
 	};
 
 	return (
@@ -218,15 +240,12 @@ const Timer = () => {
 					)}
 				</ThemeProvider>
 				<TimerActions
-					stopPomodoroCycle={
-						stopPomodoroCycle
-					}></TimerActions>
+					stopPomodoroCycle={stopPomodoroCycle}></TimerActions>
 			</div>
 
-			<Streaks
-				completedPomodoros={completedPomodoros}></Streaks>
+			<Streaks completedPomodoros={completedPomodoros}></Streaks>
 		</div>
 	);
-}
+};
 
 export default Timer;
