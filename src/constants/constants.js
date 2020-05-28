@@ -11,8 +11,8 @@ export const THINK_STRAIGHT_KEY = "thinkstraight_";
 export const DATE = "DATE";
 export const COMPLETED = "COMPLETED";
 
-export const POMODORO_LENGTH = 1500; // 25 * 60
-export const SHORT_BREAK_LENGTH = 300; // 5 * 60
-export const LONG_BREAK_LENGTH = 900; // 15 * 60
+export const POMODORO_LENGTH = 1500000; // 25 min * 60 s/ min * 1000 ms / s
+export const SHORT_BREAK_LENGTH = 300000; // 5 * 60 * 1000
+export const LONG_BREAK_LENGTH = 900000; // 15 * 60 * 1000å
 
 export const RESET = "reset.";
