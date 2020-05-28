@@ -49,8 +49,8 @@ const Timer = () => {
 	}, []);
 
 	useEffect(() => {
-		if ((isOnShortBreak && timeElapsed === Constants.SHORT_BREAK_LENGTH) ||
-			(isOnLongBreak && timeElapsed === Constants.LONG_BREAK_LENGTH)
+		if ((isOnShortBreak && timeElapsed >= Constants.SHORT_BREAK_LENGTH) ||
+			(isOnLongBreak && timeElapsed >= Constants.LONG_BREAK_LENGTH)
 		) {
 			playAlarm();
 
@@ -60,7 +60,7 @@ const Timer = () => {
 			clearInterval(intervalId);
 
 			resetTimer();
-		} else if (!isOnShortBreak && !isOnLongBreak && timeElapsed === Constants.POMODORO_LENGTH) {
+		} else if (!isOnShortBreak && !isOnLongBreak && timeElapsed >= Constants.POMODORO_LENGTH) {
 			playAlarm();
 
 			document.title = Constants.THINK_STRAIGHT;
