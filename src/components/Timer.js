@@ -99,7 +99,7 @@ const Timer = () => {
 
 	useEffect(() => {
 		if (timerStartTime) {
-			var refreshIntervalId = setInterval(incrementTimer, 1000);
+			var refreshIntervalId = setInterval(incrementTimer, 100);
 
 			if (isOnShortBreak || isOnLongBreak) {
 				document.title = Constants.TAKING_A_BREATHER;
@@ -148,7 +148,7 @@ const Timer = () => {
 	};
 
 	const incrementTimer = () => {
-		let delta = ((new Date() - timerStartTime) / 1000) | 0; // floor
+		let delta = (new Date() - timerStartTime);
 
 		setTimeElapsed(prevTimeElapsed => delta + timeElapsed);
 	}
